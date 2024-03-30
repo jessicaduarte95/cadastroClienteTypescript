@@ -34,7 +34,6 @@ export const Principal = () => {
 
   useEffect(() => {
     obter()
-    console.log('Dados de usuários:', lista);
   }, []);
 
   return (
@@ -46,7 +45,7 @@ export const Principal = () => {
         </Grid>
       </Grid>
       <ModalInserir open={open} handleCloseInserir={handleCloseInserir} setLista={setLista} />
-      <Tabela lista={lista} />
+      <Tabela lista={lista} setLista={setLista}/>
     </Grid>
   );
 }

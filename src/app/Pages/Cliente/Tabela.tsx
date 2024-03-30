@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,10 +7,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 interface Props {
     lista: any;
+    setLista: any;
 }
 
 interface Column {
@@ -20,12 +23,12 @@ interface Column {
     width?: string;
     align?: 'center';
     format?: (value: number) => string;
+    lista?: any;
 }
-
 
 export const Tabela: React.FC<Props> = (props) => {
 
-    const { lista } = props;
+    const { lista, setLista } = props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -45,6 +48,34 @@ export const Tabela: React.FC<Props> = (props) => {
         { id: 'editar', label: 'Editar', width: '10%' },
         { id: 'excluir', label: 'Excluir', width: '10%' },
     ]
+
+    const handleDeleteItem = async (data: any) => {
+        const id = data.id
+        await axios.delete<FormData[]>(`http://localhost:5000/deletar/${id}`)
+            .then(response => {
+                setLista(response.data);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar dados de usuários:', error);
+            });
+    }
+
+    useEffect(() => {
+        if (lista.length > 0) {
+            lista.forEach((element: any) => {
+                element.editar = (
+                    <button style={{ border: 'none', backgroundColor: 'white' }}>
+                        <EditIcon fontSize="small" onClick={() => { console.log(element) }} />
+                    </button>
+                )
+                element.excluir = (
+                    <button style={{ border: 'none', backgroundColor: 'white' }}>
+                        <DeleteIcon fontSize="small" onClick={() => { handleDeleteItem(element) }} />
+                    </button>
+                )
+            });
+        }
+    }, [lista]);
 
     return (
         <Paper sx={{ width: '45rem', overflow: 'hidden', marginTop: '3rem' }}>
@@ -74,11 +105,11 @@ export const Tabela: React.FC<Props> = (props) => {
                                         {columns.map((column) => {
                                             const value = row[column.id];
                                             return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
-                                                </TableCell>
+                                                <>
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        {value}
+                                                    </TableCell>
+                                                </>
                                             );
                                         })}
                                     </TableRow>
