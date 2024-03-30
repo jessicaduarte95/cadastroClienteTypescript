@@ -15,6 +15,8 @@ import axios from 'axios';
 interface Props {
     lista: any;
     setLista: any;
+    handleOpenEditar: () => void;
+    setdataItem: any;
 }
 
 interface Column {
@@ -28,7 +30,7 @@ interface Column {
 
 export const Tabela: React.FC<Props> = (props) => {
 
-    const { lista, setLista } = props;
+    const { lista, setLista, handleOpenEditar, setdataItem } = props;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -65,7 +67,7 @@ export const Tabela: React.FC<Props> = (props) => {
             lista.forEach((element: any) => {
                 element.editar = (
                     <button style={{ border: 'none', backgroundColor: 'white' }}>
-                        <EditIcon fontSize="small" onClick={() => { console.log(element) }} />
+                        <EditIcon fontSize="small" onClick={() => { handleOpenEditar(); setdataItem(element) }} />
                     </button>
                 )
                 element.excluir = (

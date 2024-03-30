@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { ModalInserir } from './ModalInserir';
 import { Tabela } from './Tabela';
 import axios from 'axios';
+import { ModalEditar } from './ModalEditar';
 
 interface FormData {
   nome: string;
@@ -20,6 +21,10 @@ export const Principal = () => {
   const handleOpenInserir = () => setOpen(true);
   const handleCloseInserir = () => setOpen(false);
   const [lista, setLista] = useState<FormData[]>([]);
+  const [openEditar, setOpenEditar] = useState<boolean>(false);
+  const handleOpenEditar = () => setOpenEditar(true);
+  const handleCloseEditar = () => setOpenEditar(false);
+  const [dataItem, setdataItem] = useState<any>([]);
 
 
   const obter = async () => {
@@ -45,7 +50,8 @@ export const Principal = () => {
         </Grid>
       </Grid>
       <ModalInserir open={open} handleCloseInserir={handleCloseInserir} setLista={setLista} />
-      <Tabela lista={lista} setLista={setLista}/>
+      <Tabela lista={lista} setLista={setLista} handleOpenEditar={handleOpenEditar} setdataItem={setdataItem}/>
+      <ModalEditar openEditar={openEditar} handleCloseEditar={handleCloseEditar} dataItem={dataItem} setLista={setLista}/>
     </Grid>
   );
 }
