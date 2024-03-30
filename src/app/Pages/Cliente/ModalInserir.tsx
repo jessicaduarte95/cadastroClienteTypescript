@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import './styled.css'
 import Typography from '@mui/material/Typography';
@@ -6,12 +7,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { useForm } from 'react-hook-form';
-
-interface Props {
-    open: boolean;
-    handleCloseInserir: any;
-}
+import axios from 'axios';
 
 interface FormData {
     nome: string;
@@ -19,13 +15,28 @@ interface FormData {
     cpf: string;
 }
 
+interface Props {
+    open: boolean;
+    handleCloseInserir: () => void;
+    setLista: any;
+}
+
 export const ModalInserir: React.FC<Props> = (props) => {
 
-    const { open, handleCloseInserir } = props;
+    const { open, handleCloseInserir, setLista } = props;
     const { register, handleSubmit, reset } = useForm<FormData>();
 
-    const onSubmit = (data: FormData) => {
-        console.log(data);
+    const onSubmit = async (data: FormData) => {
+        await axios.post<FormData[]>(`http://localhost:5000/inserir`, {
+            nome: data.nome,
+            email: data.email,
+            cpf: data.cpf
+        })
+            .then((response) => {
+                setLista(response.data);
+            }).catch((error: any) => {
+                console.log("Erro: ", error);
+            })
         reset();
         handleCloseInserir();
     };
