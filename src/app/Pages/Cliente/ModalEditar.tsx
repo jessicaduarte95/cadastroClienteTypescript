@@ -66,7 +66,7 @@ export const ModalEditar: React.FC<Props> = (props) => {
                             <TextField type="text" label="CPF" variant="outlined" {...register("cpf")} defaultValue={dataItem.cpf} />
                         </Box>
                         <Grid item className='containerButton' style={{ marginTop: '1rem' }}>
-                            <Button variant="outlined" style={{ marginRight: '0.5rem' }}>Fechar</Button>
+                            <Button variant="outlined" style={{ marginRight: '0.5rem' }} onClick={handleCloseEditar}>Fechar</Button>
                             <Button variant="contained" type="submit">Salvar</Button>
                         </Grid>
                     </Box>

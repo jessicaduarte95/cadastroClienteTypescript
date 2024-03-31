@@ -9,7 +9,6 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useEffect } from 'react';
 import axios from 'axios';
 
 interface Props {
@@ -44,11 +43,11 @@ export const Tabela: React.FC<Props> = (props) => {
     };
 
     const columns: readonly Column[] = [
-        { id: 'nome', label: 'Nome', width: '30' },
-        { id: 'email', label: 'Email', width: '30' },
-        { id: 'cpf', label: 'CPF', width: '20' },
-        { id: 'editar', label: 'Editar', width: '10%' },
-        { id: 'excluir', label: 'Excluir', width: '10%' },
+        { id: 'nome', label: 'Nome', width: '30%' },
+        { id: 'email', label: 'Email', width: '30%' },
+        { id: 'cpf', label: 'CPF', width: '30%' },
+        { id: 'editar', label: 'Editar', width: '5%' },
+        { id: 'excluir', label: 'Excluir', width: '5%' },
     ]
 
     const handleDeleteItem = async (data: any) => {
@@ -61,23 +60,6 @@ export const Tabela: React.FC<Props> = (props) => {
                 console.error('Erro ao buscar dados de usuários:', error);
             });
     }
-
-    useEffect(() => {
-        if (lista.length > 0) {
-            lista.forEach((element: any) => {
-                element.editar = (
-                    <button style={{ border: 'none', backgroundColor: 'white' }}>
-                        <EditIcon fontSize="small" onClick={() => { handleOpenEditar(); setdataItem(element) }} />
-                    </button>
-                )
-                element.excluir = (
-                    <button style={{ border: 'none', backgroundColor: 'white' }}>
-                        <DeleteIcon fontSize="small" onClick={() => { handleDeleteItem(element) }} />
-                    </button>
-                )
-            });
-        }
-    }, [lista]);
 
     return (
         <Paper sx={{ width: '45rem', overflow: 'hidden', marginTop: '3rem' }}>
@@ -108,9 +90,28 @@ export const Tabela: React.FC<Props> = (props) => {
                                             const value = row[column.id];
                                             return (
                                                 <>
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {value}
-                                                    </TableCell>
+                                                    {
+                                                        column.id !== 'editar' && column.id !== 'excluir' &&
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            {value}
+                                                        </TableCell>
+                                                    }
+                                                    {
+                                                        column.id === 'editar' &&
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            <button style={{ border: 'none', backgroundColor: 'white' }}>
+                                                                <EditIcon fontSize="small" onClick={() => { handleOpenEditar(); setdataItem(row) }} />
+                                                            </button>
+                                                        </TableCell>
+                                                    }
+                                                    {
+                                                        column.id === 'excluir' &&
+                                                        <TableCell key={column.id} align={column.align}>
+                                                            <button style={{ border: 'none', backgroundColor: 'white' }}>
+                                                                <DeleteIcon fontSize="small" onClick={() => { handleDeleteItem(row) }} />
+                                                            </button>
+                                                        </TableCell>
+                                                    }
                                                 </>
                                             );
                                         })}
